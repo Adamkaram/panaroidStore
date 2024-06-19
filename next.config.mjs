@@ -1,7 +1,4 @@
 /** @type {import('next').NextConfig} */
-<<<<<<< HEAD
-const nextConfig = {};
-=======
 const nextConfig = {
 
  
@@ -15,6 +12,6 @@ const nextConfig = {
         ],
       },
 };
->>>>>>> dd27d75 (initial  commit)
+
 
 export default nextConfig;
