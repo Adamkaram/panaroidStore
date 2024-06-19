@@ -9,13 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
+
     "embla-carousel-react": "^8.1.5",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
-    "swiper": "^11.1.4"
-=======
+    "swiper": "^11.1.4",
     "@radix-ui/react-slot": "^1.0.2",
     "animate.css": "^4.1.1",
     "class-variance-authority": "^0.7.0",
@@ -31,16 +30,13 @@
     "swiper": "^11.1.4",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
->>>>>>> dd27d75 (initial  commit)
+
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-<<<<<<< HEAD
-=======
     "@types/react-slick": "^0.23.13",
->>>>>>> dd27d75 (initial  commit)
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
