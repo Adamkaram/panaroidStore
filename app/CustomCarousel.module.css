@@ -1,0 +1,19 @@
+.carousel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.carouselInner {
+  display: flex;
+  flex-direction: column;
+}
+
+.carouselItem {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgrey; /* Adjust as needed */
+  height: 300px; /* Adjust as needed */
+}
