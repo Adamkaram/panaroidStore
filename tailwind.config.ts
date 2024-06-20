@@ -20,6 +20,19 @@ const config = {
       },
     },
     extend: {
+      theme: {
+        extend: {
+          transitionDuration: {
+            '0': '0ms',
+          },
+          transitionDelay: {
+            '0': '0ms',
+          },
+          transform: {
+            'translate-3d-custom': 'translate3d(-1104.12px, 0px, 0px)',
+          },
+        },
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

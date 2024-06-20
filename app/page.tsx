@@ -180,14 +180,14 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from 'next/image'
 import { type CarouselApi } from "@/components/ui/carousel"
 
-export default function Home() {
+export default  () => {
   const [api, setApi] = React.useState<CarouselApi>()
   const [selectedIndex, setSelectedIndex] = useState(0)
+  console.log(selectedIndex)
  
   const updateSelectedIndex = useCallback((api : any) => {
     setSelectedIndex(api.selectedScrollSnap())
   }, [])
- 
   useEffect(() => {
     if (!api) return
 
@@ -203,27 +203,29 @@ export default function Home() {
       setApi={setApi /* Set the carousel API when it's ready */}
       orientation="vertical"
       opts = {{
-        align: "start",
+        align: "center",
         loop: true,
         skipSnaps: false,
       }}
       plugins={[
-        Autoplay({ delay: 2000 }),
+        Autoplay({ delay: 1800 }),
       ]}
     >
-      <CarouselContent className="-mt-1 h-[500px]">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItem key={index} className="pt-1 md:w-[90%]">
+      <CarouselContent className=" h-[900px] ">
+        {Array.from({ length: 14 }).map((_, index) => (
+          <CarouselItem key={index} className=" -m-5 -p-24 md:w-[100%] basis-1/5">
             <div>
-                <CardContent className={`p-1  flex items-center justify-center p-6${
-                selectedIndex === index
-                  ? "animate__animated animate__bounce animate__faster"
+                <CardContent className={`  flex items-center justify-center  z-0 ${
+                selectedIndex  === index  
+                  ? "animate__animated animate__bounce z-1  " 
                   : ""
-              }`}>
+              }`}
+              
+              >
                 <Image
       src="/Header/card-front.webp"
-      width={100}
-      height={100}
+      width={310}
+      height={210}
       alt="Picture of the author"
     />
             
