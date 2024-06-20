@@ -158,15 +158,14 @@
 //       </div>
 
 //       <a href="https://www.supah.it" target="_blank" className="logo">P</a>
-      
+
 //       <div className="cursor cursor1" ref={(el) => (cursorsRef.current[0] = el)}></div>
 //       <div className="cursor cursor2" ref={(el) => (cursorsRef.current[1] = el)}></div>
 //     </>
 //   );
 // };
 
-
-"use client"
+"use client";
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -175,65 +174,73 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import "animate.css"; // Import animate.css styles
+// import "animate.css"; // Import animate.css styles
 import Autoplay from "embla-carousel-autoplay";
-import Image from 'next/image'
-import { type CarouselApi } from "@/components/ui/carousel"
+import Image from "next/image";
+import { type CarouselApi } from "@/components/ui/carousel";
 
-export default  () => {
-  const [api, setApi] = React.useState<CarouselApi>()
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  console.log(selectedIndex)
- 
-  const updateSelectedIndex = useCallback((api : any) => {
-    setSelectedIndex(api.selectedScrollSnap())
-  }, [])
+export default () => {
+  const [api, setApi] = React.useState<CarouselApi>();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  console.log(selectedIndex);
+
+  const updateSelectedIndex = useCallback((api: any) => {
+    setSelectedIndex(api.selectedScrollSnap());
+  }, []);
   useEffect(() => {
-    if (!api) return
+    if (!api) return;
 
-    updateSelectedIndex(api) // Update index on mount
- 
+    updateSelectedIndex(api); // Update index on mount
+
     api
       .on("select", updateSelectedIndex) // Update index when it changes: https://www.embla-carousel.com/api/events/#select
-      .on("reInit", updateSelectedIndex) // Update index when the carousel re-mounts: https://www.embla-carousel.com/api/events/#reinit
-  }, [api])
+      .on("reInit", updateSelectedIndex); // Update index when the carousel re-mounts: https://www.embla-carousel.com/api/events/#reinit
+  }, [api]);
 
   return (
-    <Carousel
+
+    <div className="grid grid-col-2">
+    
+      <div className="flex justify-center text-gray-100	 text-xl	 title">
+      <h1>this website under developing tag</h1>
+      </div>
+      
+      <div>
+      <Carousel
       setApi={setApi /* Set the carousel API when it's ready */}
       orientation="vertical"
-      opts = {{
+      opts={{
         align: "center",
         loop: true,
         skipSnaps: false,
       }}
-      plugins={[
-        Autoplay({ delay: 1800 }),
-      ]}
-    >
+      plugins={[Autoplay({ delay: 1800 })]}>
       <CarouselContent className=" h-[900px] ">
         {Array.from({ length: 14 }).map((_, index) => (
-          <CarouselItem key={index} className=" -m-5 -p-24 md:w-[100%] basis-1/5">
+          <CarouselItem
+            key={index}
+            className=" -m-5 -p-24 md:w-[100%] basis-1/5">
             <div>
-                <CardContent className={`  flex items-center justify-center  z-0 ${
-                selectedIndex  === index  
-                  ? "animate__animated animate__bounce z-1  " 
-                  : ""
-              }`}
-              
-              >
-                <Image
-      src="/Header/card-front.webp"
-      width={310}
-      height={210}
-      alt="Picture of the author"
-    />
+              <CardContent
+                className={` 
+               flex items-center justify-center  z-0 		
             
-                </CardContent>
+                 ${selectedIndex === index  ? "animate-bounce	 " : ""}
+               
+                `}>
+                <Image
+                  src="/Header/card-front.webp"
+                  width={310}
+                  height={210}
+                  alt="Picture of the author"
+                />
+              </CardContent>
             </div>
           </CarouselItem>
         ))}
       </CarouselContent>
     </Carousel>
-  );
-}
+    </div>
+      </div>
+      );
+};

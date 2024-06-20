@@ -20,19 +20,7 @@ const config = {
       },
     },
     extend: {
-      theme: {
-        extend: {
-          transitionDuration: {
-            '0': '0ms',
-          },
-          transitionDelay: {
-            '0': '0ms',
-          },
-          transform: {
-            'translate-3d-custom': 'translate3d(-1104.12px, 0px, 0px)',
-          },
-        },
-      },
+      
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -82,10 +70,15 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        bounce : {
+          '0%, 100%': { transform: 'translateY(-3%)' },
+          '50%': {  transform: 'translateY(0)' },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        bounce: 'bounce 0.9s ease-in-out ',
       },
     },
   },
