@@ -167,7 +167,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -178,57 +178,133 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { type CarouselApi } from "@/components/ui/carousel";
+import Fastcarousel from './carousel'
+
+import {
+  EmblaCarouselType,
+  EmblaEventType,
+  EmblaOptionsType
+} from 'embla-carousel'
+
+const TWEEN_FACTOR_BASE = 0.22
+
+const numberWithinRange = (number: number, min: number, max: number): number =>
+  Math.min(Math.max(number, min), max)
 
 export default () => {
   const [api, setApi] = React.useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = useState(0);
-  console.log(selectedIndex);
+  const tweenFactor = useRef(0)
+  const tweenNodes = useRef<HTMLElement[]>([])
+
+
 
   const updateSelectedIndex = useCallback((api: any) => {
     setSelectedIndex(api.selectedScrollSnap());
   }, []);
+
+  const setTweenNodes = useCallback((api: EmblaCarouselType): void => {
+    tweenNodes.current = api.slideNodes().map((slideNode) => {
+      return slideNode.querySelector('.embla_slue') as HTMLElement
+    })
+  }, [])
+
+  const setTweenFactor = useCallback((api: EmblaCarouselType) => {
+    tweenFactor.current = TWEEN_FACTOR_BASE * api.scrollSnapList().length
+  }, [])
+
+  const tweenScale = useCallback(
+    (api: EmblaCarouselType, eventName?: EmblaEventType) => {
+      const engine = api.internalEngine()
+      const scrollProgress = api.scrollProgress()
+      const slidesInView = api.slidesInView()
+      const isScrollEvent = eventName === 'scroll'
+
+      api.scrollSnapList().forEach((scrollSnap, snapIndex) => {
+        let diffToTarget = scrollSnap - scrollProgress
+        const slidesInSnap = engine.slideRegistry[snapIndex]
+
+        slidesInSnap.forEach((slideIndex) => {
+          if (isScrollEvent && !slidesInView.includes(slideIndex)) return
+
+          if (engine.options.loop) {
+            engine.slideLooper.loopPoints.forEach((loopItem) => {
+              const target = loopItem.target()
+
+              if (slideIndex === loopItem.index && target !== 0) {
+                const sign = Math.sign(target)
+
+                if (sign === -1) {
+                  diffToTarget = scrollSnap - (1 + scrollProgress)
+                }
+                if (sign === 1) {
+                  diffToTarget = scrollSnap + (1 - scrollProgress)
+                }
+              }
+            })
+          }
+
+          const tweenValue = 1 - Math.abs(diffToTarget * tweenFactor.current)
+          const scale = numberWithinRange(tweenValue, 0, 1).toString()
+          const tweenNode = tweenNodes.current[slideIndex]
+          tweenNode.style.transform = `scale(${scale})`
+        })
+      })
+    },
+    []
+  )
+  
   useEffect(() => {
     if (!api) return;
 
     updateSelectedIndex(api); // Update index on mount
-
+    setTweenNodes(api)
+    setTweenFactor(api)
+    tweenScale(api)
     api
       .on("select", updateSelectedIndex) // Update index when it changes: https://www.embla-carousel.com/api/events/#select
-      .on("reInit", updateSelectedIndex); // Update index when the carousel re-mounts: https://www.embla-carousel.com/api/events/#reinit
-  }, [api]);
+      .on("reInit", updateSelectedIndex)
+      .on('reInit', setTweenNodes)
+      .on('reInit', setTweenFactor)
+      .on('reInit', tweenScale)
+      .on('scroll', tweenScale)
+      .on('slideFocus', tweenScale)
+      ; // Update index when the carousel re-mounts: https://www.embla-carousel.com/api/events/#reinit
+  }, [api , tweenScale]);
 
   return (
 
-    <div className="grid grid-col-2">
+    <div className="grid grid-cols-3">
     
       <div className="flex justify-center text-gray-100	 text-xl	 title">
       <h1>this website under developing tag</h1>
       </div>
       
-      <div>
-      <Carousel
-      setApi={setApi /* Set the carousel API when it's ready */}
+      <div className="flex justify-end">
+        <Carousel
+      setApi={setApi }
       orientation="vertical"
       opts={{
         align: "center",
         loop: true,
         skipSnaps: false,
       }}
-      plugins={[Autoplay({ delay: 1800 })]}>
+      plugins={[Autoplay({ delay: 1900 })]}>
       <CarouselContent className=" h-[900px] ">
         {Array.from({ length: 14 }).map((_, index) => (
           <CarouselItem
             key={index}
-            className=" -m-5 -p-24 md:w-[100%] basis-1/5">
-            <div>
+            className="embla_slue -m-5 -p-24 md:w-[100%] basis-1/5">
+            <div  className="embla_slue">
               <CardContent
                 className={` 
                flex items-center justify-center  z-0 		
             
-                 ${selectedIndex === index  ? "animate-bounce	 " : ""}
+                 ${selectedIndex === index  ? " " : ""}
                
                 `}>
                 <Image
+               
                   src="/Header/card-front.webp"
                   width={310}
                   height={210}
@@ -240,6 +316,9 @@ export default () => {
         ))}
       </CarouselContent>
     </Carousel>
+    </div>
+    <div  className="flex justify-end">
+    <Fastcarousel />
     </div>
       </div>
       );
